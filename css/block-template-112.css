@@ -1,0 +1,45 @@
+.block-112 .grid__box {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 15px;
+}
+.block-112 .grid__box-content .single__grid-wrapper .single__grid-info .single__grid-title h3 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.block-112 .grid__box-content .single__grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+}
+.block-112 .grid__box-content .single__grid-wrapper .single__grid-info {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 5px;
+  position: relative;
+}
+.block-112 .grid__box-content .single__grid-wrapper .single__grid-info .single__grid-title h3 {
+  font-size: 22px;
+  font-weight: bold;
+}
+.block-112 .grid__box-content .single__grid-wrapper .single__grid-info .post__meta .author a {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.block-112 .grid__box-content .single__grid-image a {
+  display: block;
+  position: relative;
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.block-112 .grid__box-content .single__grid-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}

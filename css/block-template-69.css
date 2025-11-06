@@ -1,0 +1,78 @@
+.block-69 .business-content-sec .business-content {
+  padding-left: 0;
+}
+.block-69 .business-content-sec .business-content .business {
+  margin-right: 0;
+  margin-left: 0;
+}
+.block-69 .business-content-sec .business-content .business .image {
+  padding-left: 0;
+  padding-right: 0;
+  height: auto;
+  min-height: 440px;
+}
+.block-69 .business-content-sec .business-content .business .image img {
+  border-radius: 5px 0 0 5px;
+  width: 100%;
+  height: 100%;
+}
+.block-69 .business-content-sec .business-content .business .post-title-wrap {
+  background-color: var(--theme-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 3rem;
+  color: var(--white-color);
+  border-radius: 0 5px 5px 0;
+}
+.block-69 .business-content-sec .business-content .business .post-title-wrap .post-title {
+  font-size: 34px;
+  font-weight: bold;
+}
+.block-69 .business-content-sec .business-content .business .post-title-wrap .post-title:hover a {
+  color: var(--light-blue);
+}
+.block-69 .business-content-sec .business-content .business .post-title-wrap .post-title a {
+  color: var(--white-color);
+  transition: all 0.3s ease;
+}
+.block-69 .business-content-sec .business-content .business .post-title-wrap .desc {
+  padding: 1rem 0;
+  font-size: 18px;
+}
+.block-69 .business-content-sec .business-content .news-post-sec {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 730px) {
+  .block-69 .business-content-sec .business-content .news-post-sec {
+    grid-template-columns: 1fr;
+  }
+}
+.block-69 .business-content-sec .business-content .news-post-sec .news-post {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.block-69 .business-content-sec .business-content .news-post-sec .news-post .news-post-img img {
+  border-radius: 5px;
+  height: 100px;
+  width: 150px;
+  object-fit: cover;
+}
+.block-69 .business-content-sec .business-content .news-post-sec .news-post .news-post-content .news-post-title {
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.block-69 .business-content-sec .business-content .news-post-sec .news-post .news-post-content .news-post-title:hover a {
+  color: var(--theme-color);
+}
+.block-69 .business-content-sec .business-content .news-post-sec .news-post .news-post-content .news-post-title a {
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}

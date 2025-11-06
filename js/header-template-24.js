@@ -1,0 +1,2 @@
+let hamburgerBtn=document.querySelector('.hamburger__btn');let mobileNav=document.querySelector('.mobile__nav');let mobileNavClose=document.querySelector('.close__mobile-nav');if(hamburgerBtn&&mobileNav){hamburgerBtn.addEventListener('click',()=>{mobileNav.classList.add('active');document.querySelector('body').style.overflow='hidden';})
+mobileNavClose.addEventListener('click',()=>{mobileNav.classList.remove('active');document.querySelector('body').style.overflow='visible';})}

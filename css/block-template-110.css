@@ -1,0 +1,109 @@
+.block-110 .grid__box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+  row-gap: 20px;
+}
+@media (max-width: 991px) {
+  .block-110 .grid__box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.block-110 .grid__box .single__grid-box {
+  grid-column: span 1;
+}
+@media (max-width: 991px) {
+  .block-110 .grid__box .single__grid-box {
+    grid-column: span 1;
+  }
+}
+@media (max-width: 375px) {
+  .block-110 .grid__box .single__grid-box {
+    grid-column: span 2;
+  }
+}
+.block-110 .grid__box .single__grid-box:nth-child(1) {
+  grid-column: 1/3;
+  grid-row: 1/3;
+}
+@media (max-width: 991px) {
+  .block-110 .grid__box .single__grid-box:nth-child(1) {
+    grid-column: span 2;
+  }
+}
+.block-110 .grid__box .single__grid-box:nth-child(1) .single__grid-image {
+  margin-bottom: 15px;
+}
+.block-110 .grid__box .single__grid-box:nth-child(1) .single__grid-headline h3 {
+  font-size: 32px;
+  line-height: 1.3;
+  font-weight: 700;
+  overflow: unset;
+  -webkit-line-clamp: unset;
+  display: unset;
+  display: unset;
+}
+@media (max-width: 767px) {
+  .block-110 .grid__box .single__grid-box:nth-child(1) .single__grid-headline h3 {
+    font-size: 26px;
+  }
+}
+@media (max-width: 575px) {
+  .block-110 .grid__box .single__grid-box:nth-child(1) .single__grid-headline h3 {
+    font-size: 20px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .block-110 .grid__box {
+    grid-gap: 20px;
+  }
+}
+@media (max-width: 577px) {
+  .block-110 .grid__box {
+    grid-gap: 15px;
+    row-gap: 20px;
+  }
+}
+.block-110 .single__grid-image {
+  margin-bottom: 10px;
+}
+.block-110 .single__grid-image a {
+  display: block;
+  position: relative;
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 66.67%;
+}
+.block-110 .single__grid-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.block-110 .single__grid-headline h3 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  display: box;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+@media (max-width: 1199px) {
+  .block-110 .single__grid-headline h3 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 575px) {
+  .block-110 .single__grid-headline h3 {
+    font-size: 18px;
+    -webkit-line-clamp: unset;
+  }
+}

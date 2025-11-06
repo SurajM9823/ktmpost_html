@@ -1,0 +1,21 @@
+.bigyapan-banner {
+  width: 100%;
+  position: relative;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+}
+.bigyapan-banner::before {
+  content: "Advertisement";
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #777;
+  font-size: 14px;
+  font-weight: 500;
+}
+.bigyapan-banner .banner {
+  width: 100%;
+}

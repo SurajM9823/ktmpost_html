@@ -1,0 +1,67 @@
+.block-57-grid .grid__card {
+  border: 1px solid #eee;
+}
+.block-57-grid .grid__card:hover .card__img img {
+  transform: scale(1.1);
+}
+.block-57-grid .grid__card:hover .card__details .card__title {
+  color: var(--theme-color);
+}
+.block-57-grid .grid__card .card__img a {
+  display: block;
+  position: relative;
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 50%;
+}
+.block-57-grid .grid__card .card__img a img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform: scale(1.01);
+  transition: all 1s ease-in-out;
+}
+.block-57-grid .grid__card .card__details .card__title {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-color);
+  transition: all 300ms ease-in-out;
+}
+.block-57-grid .grid__card .card__details .title__menu {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 0.5rem;
+}
+.block-57-grid .grid__card .card__details .title__menu li {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  grid-gap: 0.5rem;
+}
+.block-57-grid .grid__card .card__details .title__menu li:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+.block-57-grid .grid__card .card__details .title__menu li:hover a {
+  color: var(--theme-color) !important;
+}
+.block-57-grid .grid__card .card__details .title__menu li i {
+  color: var(--secondary-color);
+  font-size: 20px;
+}
+.block-57-grid .grid__card .card__details .title__menu li a {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-color);
+  transition: all 300ms ease-in-out;
+}

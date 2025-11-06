@@ -1,0 +1,6 @@
+.bigyapan-aside {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+  width: 100%;
+}

@@ -1,0 +1,203 @@
+
+@import url(https://fonts.googleapis.com/css?family=Mukta:200,300,regular,500,600,700,800);
+
+:root{
+    --text-color: #181818;
+    --primary-color: #078cca;
+    --secondary-color: #a32525;
+    --para-color: #4a4a4a;
+}
+
+/* global resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Mukta', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label {
+    margin: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+.pt-15 {
+    padding-top: 15px;
+}
+
+.pb-15 {
+    padding-bottom: 15px;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pt-60 {
+    padding-bottom: 60px;
+}
+
+.pb-60 {
+    padding-top: 60px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.mt-60 {
+    margin-top: 60px;
+}
+
+.mb-60 {
+    margin-bottom: 60px;
+}
+
+.mt-80 {
+    margin-top: 80px;
+}
+
+.mt-100 {
+    margin-top: 100px;
+}
+
+.mt-120 {
+    margin-top: 120px;
+}
+
+a,
+a:hover {
+    text-decoration: none !important;
+}
+
+a {
+    color: inherit !important;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-container {
+    max-width: 1280px;
+    margin-inline: auto;
+}
+
+.text-center {
+    display: flex !important;
+    justify-content: center;
+}
+
+.text-start {
+    display: flex !important;
+    justify-content: flex-start;
+}
+
+.text-end {
+    display: flex !important;
+    justify-content: flex-end;
+}
+
+.news_white {
+    color: #fff;
+}
+
+.image-size a {
+    display: block;
+    position: relative;
+    height: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.image-size a img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.news_image-small a {
+    padding-bottom: 70%;
+}
+
+.news_image-square a {
+    padding-bottom: 100%;
+}
+
+.news_image-middle a {
+    padding-bottom: 60%;
+}
+
+.news_image-half a {
+    padding-bottom: 71.5%;
+}
+
+.news_image-long a {
+    padding-bottom: 150%;
+}
+
+@media (max-width: 1536px) {
+    .custom-container {
+        max-width: 95%;
+    }
+}

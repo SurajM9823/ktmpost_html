@@ -1,0 +1,107 @@
+.block-99 .grid__box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 25px;
+}
+@media (max-width: 1199px) {
+  .block-99 .grid__box {
+    grid-gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .block-99 .grid__box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 575px) {
+  .block-99 .grid__box {
+    grid-gap: 15px;
+  }
+}
+@media (max-width: 400px) {
+  .block-99 .grid__box {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.block-99 .grid__box-content:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .block-99 .grid__box-content:nth-child(1) {
+    grid-row: 1;
+    height: auto;
+  }
+}
+@media (max-width: 400px) {
+  .block-99 .grid__box-content:nth-child(1) {
+    grid-column: span 1;
+  }
+}
+.block-99 .grid__box-content:nth-child(1) .single__grid-wrapper {
+  height: 100%;
+  grid-gap: 20px;
+}
+@media (max-width: 768px) {
+  .block-99 .grid__box-content:nth-child(1) .single__grid-wrapper {
+    height: auto;
+  }
+}
+.block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-image {
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-image {
+    height: auto;
+  }
+}
+.block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-image a {
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-image a {
+    height: auto;
+  }
+}
+.block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-image a img {
+  height: 100%;
+}
+.block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-info .single__grid-title h3 {
+  font-size: 2.4375rem;
+}
+@media (max-width: 575px) {
+  .block-99 .grid__box-content:nth-child(1) .single__grid-wrapper .single__grid-info .single__grid-title h3 {
+    font-size: 2rem;
+  }
+}
+.block-99 .grid__box-content .single__grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+}
+.block-99 .grid__box-content .single__grid-image a {
+  display: block;
+  position: relative;
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+.block-99 .grid__box-content .single__grid-image a img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.block-99 .grid__box-content .single__grid-info .single__grid-title h3 {
+  font-size: 22px;
+  font-weight: bold;
+}
+.block-99 .grid__box-content .single__grid-info .post__meta .author a {
+  font-size: 1.125rem;
+  font-weight: 700;
+}

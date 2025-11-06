@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>समाचार विवरण - ktmpost</title>
+    <link rel="stylesheet" href="css/global-12.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="icon" href="images/logo/logo.png" type="image/x-icon">
+    <script src="js/jquery.min.js"></script>
+    <script src="server/config.js"></script>
+    <script src="server/header.js"></script>
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ne_NP/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1" nonce="YOUR_NONCE"></script>
+    <style>
+        /* root variables - Adjusted for red theme similar to ekagaj */
+        :root {
+            --cta-btn: #fbd302;
+            --theme-color-rgb: 17, 82, 156;
+            --text-color: #666;
+            --para-color: #4a4a4a;
+            --dark-background: #df2433e6;
+            --light-theme-color: #dac6a5;
+            --theme-color: #d3252e; /* Red theme */
+            --secondary-color: #df2433e6;
+            --psuedo-color: #df2433e6;
+            --font-family: 'Noto Sans Devanagari', sans-serif; /* For Nepali support */
+        }
+        /* Import Nepali font */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+        body {
+            font-family: var(--font-family);
+        }
+        /* Make all images responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .news-detail-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .main-content {
+            padding-right: 15px;
+        }
+        .sidebar {
+            padding-left: 15px;
+        }
+        .news-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: black;
+            line-height: 1.2;
+            font-weight: bold;
+            text-align: left;
+        }
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        .author-info {
+            font-weight: bold;
+            color: var(--theme-color);
+        }
+        .publish-date {
+            color: #666;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        .news-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .news-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--para-color);
+            text-align: justify;
+            margin-bottom: 40px;
+        }
+        .news-content p {
+            margin-bottom: 1rem;
+            /* Removed text-indent for no indentation */
+        }
+        .news-content h2,
+        .news-content h3 {
+            color: var(--theme-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--theme-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        /* Sidebar Styles - Latest News */
+        .sidebar-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .sidebar-section h3 {
+            color: var(--theme-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--theme-color);
+            padding-bottom: 5px;
+        }
+        .latest-news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .latest-news-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        .latest-news-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .latest-news-link {
+            display: block;
+            color: var(--para-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            transition: color 0.3s;
+        }
+        .latest-news-link:hover {
+            color: var(--theme-color);
+            text-decoration: underline;
+        }
+        /* Related News Grid Styles */
+        .related-news-section {
+            background: #f8f9fa;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+        .related-news-section .custom-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .related-news-section h3 {
+            color: var(--theme-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--theme-color);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .related-news-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .related-news-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .related-news-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .related-news-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .related-news-content {
+            padding: 15px;
+        }
+        .related-news-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--para-color);
+            margin: 0;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .related-news-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .related-news-link:hover .related-news-title {
+            color: var(--theme-color);
+        }
+
+        /* Share Buttons Styles */
+        .share-buttons {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .share-label {
+            font-weight: bold;
+            color: var(--theme-color);
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+        .share-icons {
+            display: flex;
+            gap: 10px;
+        }
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        .facebook-btn {
+            background: #1877f2;
+            color: white;
+        }
+        .facebook-btn:hover {
+            background: #166fe5;
+            transform: scale(1.1);
+        }
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+        }
+        .whatsapp-btn:hover {
+            background: #128c7e;
+            transform: scale(1.1);
+        }
+        .twitter-btn {
+            background: #1da1f2;
+            color: white;
+        }
+        .twitter-btn:hover {
+            background: #0d95e8;
+            transform: scale(1.1);
+        }
+        .instagram-btn {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            color: white;
+        }
+        .instagram-btn:hover {
+            transform: scale(1.1);
+        }
+        .share-more-btn {
+            background: var(--theme-color);
+            color: white;
+        }
+        .share-more-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        /* Comments Section Styles */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--theme-color);
+        }
+        .comments-section h3 {
+            color: var(--theme-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .fb-comments {
+            margin-top: 20px;
+        }
+
+        /* Share Dialog Styles */
+        .share-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: var(--font-family);
+        }
+        .share-dialog-content {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .share-dialog h3 {
+            margin: 0 0 20px 0;
+            color: #1f2937;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .share-option-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .share-url-section {
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .share-url-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .share-url-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+            background: white;
+            color: #374151;
+        }
+        .share-url-input:focus {
+            outline: none;
+            border-color: var(--theme-color);
+        }
+        .share-dialog-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .share-dialog-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .copy-btn {
+            background: var(--theme-color);
+            color: white;
+        }
+        .copy-btn:hover {
+            background: var(--secondary-color);
+        }
+        .close-btn {
+            background: #6b7280;
+            color: white;
+        }
+        .close-btn:hover {
+            background: #4b5563;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .news-detail-wrapper {
+                padding: 10px;
+            }
+            .main-content,
+            .sidebar {
+                padding: 0;
+            }
+            .news-title {
+                font-size: 2rem;
+            }
+            .news-meta {
+                justify-content: flex-start;
+            }
+            .publish-date {
+                text-align: left;
+                margin-top: 5px;
+            }
+            .sidebar {
+                margin-top: 30px;
+            }
+            .related-news-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .related-news-image {
+                height: 120px;
+            }
+            .related-news-content {
+                padding: 10px;
+            }
+            .related-news-title {
+                font-size: 0.8rem;
+            }
+            .share-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .share-icons {
+                flex-wrap: wrap;
+            }
+            .share-dialog-content {
+                padding: 20px;
+            }
+            .share-options {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+        @media (max-width: 480px) {
+            .related-news-grid {
+                grid-template-columns: 1fr;
+            }
+            .share-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="header"></div>
+
+<div class="custom-container">
+    <div class="news-detail-wrapper">
+        <div class="row">
+            <div class="col-md-8 main-content">
+                <a href="index.html" class="back-link">&larr; होममा फर्कनुहोस्</a>
+
+                <h1 class="news-title" id="news-title">Loading...</h1>
+
+                <div class="news-meta">
+                    <div class="author-info" id="author-name">Loading...</div>
+                    <span class="publish-date" id="publish-date">Loading...</span>
+                </div>
+
+                <img id="news-image" class="news-image" src="images/logo/logo.png" alt="News Image" style="display: none;" onerror="this.src='images/logo/logo.png'">
+
+                <div class="news-content" id="news-content">
+                    Loading news content...
+                </div>
+
+                <!-- Share Buttons -->
+                <div class="share-buttons">
+                    <span class="share-label">सेयर गर्नुहोस्:</span>
+                    <div class="share-icons">
+                        <button class="share-btn facebook-btn" onclick="shareOnFacebook()" title="Facebook मा सेयर गर्नुहोस्">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="share-btn whatsapp-btn" onclick="shareOnWhatsApp()" title="WhatsApp मा सेयर गर्नुहोस्">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="share-btn twitter-btn" onclick="shareOnTwitter()" title="Twitter मा सेयर गर्नुहोस्">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="share-btn instagram-btn" onclick="shareOnInstagram()" title="Instagram मा सेयर गर्नुहोस्">
+                            <i class="fab fa-instagram"></i>
+                        </button>
+                        <button class="share-btn share-more-btn" onclick="showShareDialog()" title="थप विकल्पहरू">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Facebook Comments Section -->
+                <div class="comments-section">
+                    <h3>प्रतिक्रिया दिनुहोस्</h3>
+                    <div id="fb-comments" class="fb-comments" data-href="" data-width="100%" data-numposts="10"></div>
+                </div>
+            </div>
+            <div class="col-md-4 sidebar">
+                <div class="sidebar-section">
+                    <h3>नवीनतम समाचार</h3>
+                    <ul class="latest-news-list" id="latest-news-list">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full-width Related News Section -->
+<div class="related-news-section">
+    <div class="custom-container">
+        <h3>सम्बन्धित समाचार</h3>
+        <div class="related-news-grid" id="related-news-grid">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+    class NewsDetail {
+        constructor() {
+            this.newsId = this.getNewsIdFromUrl();
+            this.apiUrl = `${BASE_URL}/articles/${this.newsId}`;
+            this.relatedApiUrl = `${BASE_URL}/articles`; // Assume supports ?category={cat}&limit=20&exclude={id}
+            this.latestApiUrl = `${BASE_URL}/articles?limit=10`; // For latest news in sidebar
+            this.init();
+        }
+
+        getNewsIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (id) return id;
+
+            // Try to get from pathname if using /news/id format
+            const pathMatch = window.location.pathname.match(/\/news\/(\d+)/);
+            return pathMatch ? pathMatch[1] : '159'; // Default to 159 if no id provided
+        }
+
+        async init() {
+            try {
+                const newsData = await this.fetchNewsDetail();
+                this.renderNewsDetail(newsData);
+                await this.fetchAndRenderLatest(); // Load latest news for sidebar
+                if (newsData.category) {
+                    await this.fetchAndRenderRelated(newsData.category, newsData.id);
+                }
+            } catch (error) {
+                console.error('Error loading news detail:', error);
+                this.showError();
+            }
+        }
+
+        async fetchNewsDetail() {
+            const response = await fetch(this.apiUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        async fetchRelated(category, excludeId) {
+            const params = new URLSearchParams({
+                category: category,
+                limit: 20,
+                exclude: excludeId
+            });
+            const response = await fetch(`${this.relatedApiUrl}?${params}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        async fetchLatest() {
+            const response = await fetch(this.latestApiUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        renderNewsDetail(news) {
+            // Update title
+            document.getElementById('news-title').textContent = news.title;
+
+            // Update meta information
+            const authorNameEl = document.getElementById('author-name');
+            if (news.author && news.author.name) {
+                authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ${news.author.name}`;
+            } else {
+                authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ktmpost`; // Default like ekagaj
+            }
+            document.getElementById('publish-date').textContent = this.formatDateNepali(news.publishDate + ' ' + (news.publishTime || ''));
+
+            // Update news image if exists
+            const newsImage = document.getElementById('news-image');
+            if (news.featuredImage) {
+                newsImage.src = news.featuredImage;
+                newsImage.alt = news.title;
+                newsImage.style.display = 'block';
+            } else {
+                newsImage.style.display = 'none';
+            }
+
+            // Update content
+            document.getElementById('news-content').innerHTML = news.content;
+
+            // Update Facebook comments URL
+            this.updateFacebookComments(this.newsId);
+        }
+
+        async fetchAndRenderRelated(category, excludeId) {
+            try {
+                const relatedNews = await this.fetchRelated(category, excludeId);
+                this.renderRelatedNews(relatedNews);
+            } catch (error) {
+                console.error('Error loading related news:', error);
+            }
+        }
+
+        async fetchAndRenderLatest() {
+            try {
+                const latestNews = await this.fetchLatest();
+                this.renderLatestNews(latestNews);
+            } catch (error) {
+                console.error('Error loading latest news:', error);
+            }
+        }
+
+        renderRelatedNews(newsList) {
+            const grid = document.getElementById('related-news-grid');
+            grid.innerHTML = newsList.slice(0, 20).map(news => `
+                <div class="related-news-item">
+                    <a href="?id=${news.id}" class="related-news-link">
+                        <img src="${news.featuredImage || 'images/logo/logo.png'}" alt="${news.title}" class="related-news-image" onerror="this.src='images/logo/logo.png'">
+                        <div class="related-news-content">
+                            <h4 class="related-news-title">${news.title}</h4>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        renderLatestNews(newsList) {
+            const list = document.getElementById('latest-news-list');
+            list.innerHTML = newsList.slice(0, 10).map(news => `
+                <li class="latest-news-item">
+                    <a href="?id=${news.id}" class="latest-news-link">${news.title}</a>
+                </li>
+            `).join('');
+        }
+
+        formatDateNepali(dateString) {
+            const date = new Date(dateString);
+            const weekdays = ['आइतबार', 'सोमबार', 'मङ्गलबार', 'बुधबार', 'बिहिबार', 'शुक्रबार', 'शनिबार'];
+            const months = ['जनवरी', 'फेब्रुअरी', 'मार्च', 'अप्रिल', 'मे', 'जुन', 'जुलाई', 'अगस्ट', 'सेप्टेम्बर', 'अक्टोबर', 'नोभेम्बर', 'डिसेम्बर'];
+
+            const toNepaliDigits = (num) => {
+                const nepaliDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+                return num.toString().split('').map(d => nepaliDigits[parseInt(d)]).join('');
+            };
+
+            const weekday = weekdays[date.getDay()];
+            const day = toNepaliDigits(date.getDate());
+            const month = months[date.getMonth()];
+            const year = toNepaliDigits(date.getFullYear());
+
+            return `${weekday} ${day} ${month} ${year}`;
+        }
+
+        showError() {
+            document.getElementById('news-title').textContent = 'News Not Found';
+            document.getElementById('news-content').innerHTML = '<p>Sorry, the requested news article could not be found.</p>';
+        }
+
+        // Share functions
+        shareOnFacebook() {
+            const shareUrl = `${BASE_URL}/share/${this.newsId}/`;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+
+        shareOnWhatsApp() {
+            const shareUrl = `${BASE_URL}/share/${this.newsId}/`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+
+        shareOnTwitter() {
+            const shareUrl = `${BASE_URL}/share/${this.newsId}/`;
+            const title = document.getElementById('news-title').textContent;
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`, '_blank');
+        }
+
+        shareOnInstagram() {
+            // Instagram doesn't support direct sharing via URL, so we'll copy to clipboard
+            const shareUrl = `${BASE_URL}/share/${this.newsId}/`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert('लिंक क्लिपबोर्डमा कपी गरियो। Instagram मा पेस्ट गर्नुहोस्।');
+            });
+        }
+
+        showShareDialog() {
+            const shareUrl = `${BASE_URL}/share/${this.newsId}/`;
+            const title = document.getElementById('news-title').textContent;
+
+            const shareDialog = document.createElement('div');
+            shareDialog.className = 'share-dialog';
+            shareDialog.innerHTML = `
+                <div class="share-dialog-content">
+                    <h3>सेयर गर्नुहोस्</h3>
+                    <div class="share-options">
+                        <button class="share-option-btn" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}', '_blank')" style="background: #0077B5; color: white;">📊 LinkedIn</button>
+                        <button class="share-option-btn" onclick="window.open('https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}', '_blank')" style="background: #FF4500; color: white;">🔗 Reddit</button>
+                        <button class="share-option-btn" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}', '_blank')" style="background: #0088cc; color: white;">✈️ Telegram</button>
+                        <button class="share-option-btn" onclick="window.open('https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(title)}', '_blank')" style="background: #BD081C; color: white;">📌 Pinterest</button>
+                        <button class="share-option-btn" onclick="window.open('https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}', '_blank')" style="background: #001935; color: white;">📝 Tumblr</button>
+                        <button class="share-option-btn" onclick="window.open('mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareUrl)}', '_blank')" style="background: #34495e; color: white;">📧 Email</button>
+                        <button class="share-option-btn" onclick="window.print()" style="background: #7f8c8d; color: white;">🖨️ Print</button>
+                        <button class="share-option-btn" onclick="window.open('viber://forward?text=${encodeURIComponent(title + ' ' + shareUrl)}', '_blank')" style="background: #665CAC; color: white;">📞 Viber</button>
+                        <button class="share-option-btn" onclick="window.open('https://web.skype.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}', '_blank')" style="background: #00AFF0; color: white;">💬 Skype</button>
+                        <button class="share-option-btn" onclick="window.open('https://www.blogger.com/blog-this.g?u=${encodeURIComponent(shareUrl)}&n=${encodeURIComponent(title)}', '_blank')" style="background: #FF5722; color: white;">📰 Blogger</button>
+                        <button class="share-option-btn" onclick="window.open('https://getpocket.com/edit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}', '_blank')" style="background: #EF3F56; color: white;">💾 Pocket</button>
+                        <button class="share-option-btn" onclick="window.open('https://digg.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}', '_blank')" style="background: #000000; color: white;">⚡ Digg</button>
+                    </div>
+                    <div class="share-url-section">
+                        <div class="share-url-label">लिंक कपी गर्नुहोस्:</div>
+                        <input type="text" class="share-url-input" value="${shareUrl}" readonly onclick="this.select(); this.setSelectionRange(0, 99999);">
+                    </div>
+                    <div class="share-dialog-buttons">
+                        <button class="share-dialog-btn copy-btn" onclick="
+                            navigator.clipboard.writeText('${shareUrl}').then(() => {
+                                this.textContent = 'कपी भयो!';
+                                this.style.background = '#10b981';
+                                setTimeout(() => {
+                                    this.textContent = 'लिंक कपी गर्नुहोस्';
+                                    this.style.background = 'var(--theme-color)';
+                                }, 2000);
+                            }).catch(() => alert('कपी गर्न सकिएन!'));
+                        ">लिंक कपी गर्नुहोस्</button>
+                        <button class="share-dialog-btn close-btn" onclick="
+                            const dialog = this.closest('.share-dialog');
+                            document.body.removeChild(dialog);
+                        ">बन्द गर्नुहोस्</button>
+                    </div>
+                </div>
+            `;
+
+            shareDialog.onclick = (e) => {
+                if (e.target === shareDialog) {
+                    document.body.removeChild(shareDialog);
+                }
+            };
+
+            document.body.appendChild(shareDialog);
+        }
+
+        // Update Facebook comments URL when news loads
+        updateFacebookComments(newsId) {
+            const commentsElement = document.getElementById('fb-comments');
+            if (commentsElement) {
+                commentsElement.setAttribute('data-href', `${window.location.origin}/news/${newsId}`);
+                // Re-render Facebook comments
+                if (window.FB) {
+                    window.FB.XFBML.parse();
+                }
+            }
+        }
+
+        // Make share functions globally available
+        makeShareFunctionsGlobal() {
+            window.shareOnFacebook = () => this.shareOnFacebook();
+            window.shareOnWhatsApp = () => this.shareOnWhatsApp();
+            window.shareOnTwitter = () => this.shareOnTwitter();
+            window.shareOnInstagram = () => this.shareOnInstagram();
+            window.showShareDialog = () => this.showShareDialog();
+        }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        const newsDetail = new NewsDetail();
+        newsDetail.makeShareFunctionsGlobal();
+        // Load header and footer
+        $("#header").load("include/header.html", function() {
+            new DynamicHeader();
+        });
+        $("#footer").load("include/footer.html");
+    });
+</script>
+</body>
+</html>
