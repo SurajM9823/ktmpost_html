@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>समाचार विवरण - ktmpost</title>
+    <link rel="stylesheet" href="css/global-12.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/all.css" />
+    <link rel="icon" href="images/logo/logo.png" type="image/x-icon" />
+    <script src="js/jquery.min.js"></script>
+    <script src="server/config.js"></script>
+    <script src="server/header.js"></script>
+    <!-- Facebook SDK -->
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/ne_NP/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"
+      nonce="YOUR_NONCE"
+    ></script>
+    <style>
+      /* root variables - Adjusted for red theme similar to ekagaj */
+      :root {
+        --cta-btn: #fbd302;
+        --theme-color-rgb: 17, 82, 156;
+        --text-color: #666;
+        --para-color: #4a4a4a;
+        --dark-background: #df2433e6;
+        --light-theme-color: #dac6a5;
+        --theme-color: #d3252e; /* Red theme */
+        --secondary-color: #df2433e6;
+        --psuedo-color: #df2433e6;
+        --font-family: "Noto Sans Devanagari", sans-serif; /* For Nepali support */
+      }
+      /* Import Nepali font */
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap");
+      body {
+        font-family: var(--font-family);
+      }
+      /* Make all images responsive */
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      .news-detail-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .main-content {
+        padding-right: 15px;
+      }
+      .sidebar {
+        padding-left: 15px;
+      }
+      .news-title {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: black;
+        line-height: 1.2;
+        font-weight: bold;
+        text-align: left;
+      }
+      .news-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        flex-wrap: wrap;
+      }
+      .author-info {
+        font-weight: bold;
+        color: var(--theme-color);
+      }
+      .publish-date {
+        color: #666;
+        font-size: 0.9rem;
+        text-align: right;
+      }
+      .news-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .news-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: var(--para-color);
+        text-align: justify;
+        margin-bottom: 40px;
+      }
+      .news-content p {
+        margin-bottom: 1rem;
+        /* Removed text-indent for no indentation */
+      }
+      .news-content h2,
+      .news-content h3 {
+        color: var(--theme-color);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: var(--theme-color);
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      /* Sidebar Styles - Latest News */
+      .sidebar-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .sidebar-section h3 {
+        color: var(--theme-color);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        border-bottom: 2px solid var(--theme-color);
+        padding-bottom: 5px;
+      }
+      .latest-news-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .latest-news-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 10px;
+      }
+      .latest-news-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .latest-news-link {
+        display: block;
+        color: var(--para-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        transition: color 0.3s;
+      }
+      .latest-news-link:hover {
+        color: var(--theme-color);
+        text-decoration: underline;
+      }
+      /* Related News Grid Styles */
+      .related-news-section {
+        background: #f8f9fa;
+        padding: 40px 0;
+        margin-top: 40px;
+      }
+      .related-news-section .custom-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .related-news-section h3 {
+        color: var(--theme-color);
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        border-bottom: 2px solid var(--theme-color);
+        padding-bottom: 10px;
+        text-align: center;
+      }
+      .related-news-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .related-news-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .related-news-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      .related-news-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+      .related-news-content {
+        padding: 15px;
+      }
+      .related-news-title {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--para-color);
+        margin: 0;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .related-news-link {
+        text-decoration: none;
+        color: inherit;
+      }
+      .related-news-link:hover .related-news-title {
+        color: var(--theme-color);
+      }
+
+      /* Share Buttons Styles */
+      .share-buttons {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+      }
+      .share-label {
+        font-weight: bold;
+        color: var(--theme-color);
+        margin-right: 15px;
+        font-size: 0.9rem;
+      }
+      .share-icons {
+        display: flex;
+        gap: 10px;
+      }
+      .share-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-size: 16px;
+      }
+      .facebook-btn {
+        background: #1877f2;
+        color: white;
+      }
+      .facebook-btn:hover {
+        background: #166fe5;
+        transform: scale(1.1);
+      }
+      .whatsapp-btn {
+        background: #25d366;
+        color: white;
+      }
+      .whatsapp-btn:hover {
+        background: #128c7e;
+        transform: scale(1.1);
+      }
+      .twitter-btn {
+        background: #1da1f2;
+        color: white;
+      }
+      .twitter-btn:hover {
+        background: #0d95e8;
+        transform: scale(1.1);
+      }
+      .instagram-btn {
+        background: linear-gradient(
+          45deg,
+          #f09433 0%,
+          #e6683c 25%,
+          #dc2743 50%,
+          #cc2366 75%,
+          #bc1888 100%
+        );
+        color: white;
+      }
+      .instagram-btn:hover {
+        transform: scale(1.1);
+      }
+      .share-more-btn {
+        background: var(--theme-color);
+        color: white;
+      }
+      .share-more-btn:hover {
+        background: var(--secondary-color);
+        transform: scale(1.1);
+      }
+
+      /* Comments Section Styles */
+      .comments-section {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid var(--theme-color);
+      }
+      .comments-section h3 {
+        color: var(--theme-color);
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+      }
+      .fb-comments {
+        margin-top: 20px;
+      }
+
+      /* Share Dialog Styles */
+      .share-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        font-family: var(--font-family);
+      }
+      .share-dialog-content {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      .share-dialog h3 {
+        margin: 0 0 20px 0;
+        color: #1f2937;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .share-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .share-option-btn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .share-url-section {
+        margin-bottom: 20px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+      .share-url-label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .share-url-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 12px;
+        background: white;
+        color: #374151;
+      }
+      .share-url-input:focus {
+        outline: none;
+        border-color: var(--theme-color);
+      }
+      .share-dialog-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+      .share-dialog-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .copy-btn {
+        background: var(--theme-color);
+        color: white;
+      }
+      .copy-btn:hover {
+        background: var(--secondary-color);
+      }
+      .close-btn {
+        background: #6b7280;
+        color: white;
+      }
+      .close-btn:hover {
+        background: #4b5563;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .news-detail-wrapper {
+          padding: 10px;
+        }
+        .main-content,
+        .sidebar {
+          padding: 0;
+        }
+        .news-title {
+          font-size: 2rem;
+        }
+        .news-meta {
+          justify-content: flex-start;
+        }
+        .publish-date {
+          text-align: left;
+          margin-top: 5px;
+        }
+        .sidebar {
+          margin-top: 30px;
+        }
+        .related-news-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+        }
+        .related-news-image {
+          height: 120px;
+        }
+        .related-news-content {
+          padding: 10px;
+        }
+        .related-news-title {
+          font-size: 0.8rem;
+        }
+        .share-buttons {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .share-icons {
+          flex-wrap: wrap;
+        }
+        .share-dialog-content {
+          padding: 20px;
+        }
+        .share-options {
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+      }
+      @media (max-width: 480px) {
+        .related-news-grid {
+          grid-template-columns: 1fr;
+        }
+        .share-options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header"></div>
+
+    <div class="custom-container">
+      <div class="news-detail-wrapper">
+        <div class="row">
+          <div class="col-md-8 main-content">
+            <a href="index.html" class="back-link">&larr; होममा फर्कनुहोस्</a>
+
+            <div class="custom-container None">
+              <div class="">
+                <div class="">
+                  <div class="None">
+                    <link rel="stylesheet" href="css/block-template-110.css" />
+                    <div class="block-110 mt-30 mb-30">
+                      <div class="custom-container" id="main-article">
+                        <style>
+                          @import url(https://fonts.googleapis.com/css?family=Khand:300,regular,500,600,700);
+                          .title-13 .title__content {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            position: relative;
+                          }
+                          .title-13 .title__content::before {
+                            content: "";
+                            position: absolute;
+                            top: 100%;
+                            left: 0;
+                            width: 100%;
+                            height: 1px;
+                            background: #e1e1e1;
+                          }
+                          .title-13 .title__content::after {
+                            display: none;
+                          }
+                          .title__content .section__title {
+                            font-family: "khand", sans-serif;
+                            font-size: 42px;
+                            font-weight: 600;
+                            color: var(--theme-color);
+                          }
+                          .title-13 .title__content .section__title::before,
+                          .title-13 .title__content .section__title::after {
+                            display: none;
+                          }
+                          .title-13 .title__content .view__more i {
+                            display: flex;
+                            font-size: 16px;
+                            color: #555;
+                          }
+                        </style>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- trending category articles -->
+          <div class="col-md-4 sidebar">
+            <div class="sidebar-section">
+              <h3>ट्रेन्डिङ</h3>
+              <ul class="latest-news-list" id="trending-article-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+          </div>
+          <!-- trending category articles end -->
+        </div>
+      </div>
+    </div>
+
+    <!-- related categpru articles -->
+    <div class="related-news-section">
+      <div class="custom-container">
+        <h3>सम्बन्धित समाचार</h3>
+        <div class="related-news-grid" id="related-news-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+    <!-- related categpru articles end -->
+
+    <div id="footer"></div>
+
+    <script>
+      let newsId;
+      $(document).ready(function () {
+        $("#footer").load("../include/footer.html");
+        $("#header").load("../include/header.html");
+
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get("category");
+
+        $.ajax({
+          url: "https://ktmpost.com/api/articles/",
+          type: "GET",
+          dataType: "json",
+          success: function (data) {
+            const articleByCategory = data.filter(
+              (article) => article.category.name === category
+            );
+
+            // TODO: add logic to determine main article by a category
+            const mainArticle = articleByCategory[0];
+
+            const trendingArticlesByCategory = articleByCategory.filter(
+              (article) => article.isTrending
+            );
+
+            const relatedArticles = articleByCategory
+              .filter((article) => article !== mainArticle)
+              .slice(0, 8);
+
+            renderMainArticle(mainArticle);
+            renderRelatedArticles(relatedArticles);
+            renderTrendingArticles(trendingArticlesByCategory);
+          },
+          error: function (xhr, status, error) {
+            console.error("Error:", error);
+          },
+        });
+      });
+
+      /**
+       * params: article object
+       */
+      function renderMainArticle(article) {
+        const container = $("#main-article");
+
+        const blockEl = document.createElement("div");
+        blockEl.className = "block-54-grid";
+        container.append(blockEl);
+
+        const renderHTML = `
+          <div class="grid__left">
+            <div class="grid__card">
+              <div class="card__img">
+                <a href="news-detail.html?id=${article.id}">
+                  <img src="${article.featuredImage}" alt="${article.title}"  />
+                </a>
+              </div>
+              <div class="card__details">
+                <h3 class="card__title">
+                  <a href="news-detail.html?id=${article.id}">
+                    ${article.title}
+                  </a>
+                </h3>
+                <div class="card__desc">
+                  ${article.excerpt}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        $(blockEl).append(renderHTML);
+      }
+
+      /**
+       * params: article object list
+       */
+      function renderTrendingArticles(articles) {
+        const list = document.getElementById("trending-article-list");
+        list.innerHTML = articles
+          .map(
+            (article) => `
+              <li class="latest-news-item">
+                <a href="news-detail.html?id=${article.id}" class="latest-news-link">${article.title}</a>
+              </li>
+            `
+          )
+          .join("");
+      }
+
+      /**
+       * params: article object list
+       */
+      function renderRelatedArticles(articles) {
+        const grid = document.getElementById("related-news-grid");
+        grid.innerHTML = articles
+          .map(
+            (article) => `
+                <div class="related-news-item">
+                  <a href="news-detail.html?id=${article.id}" class="related-news-link">
+                    <img
+                      src="${article.featuredImage}"
+                      alt="${article.title}"
+                      class="related-news-image"
+                    >
+                    <div class="related-news-content">
+                      <h4 class="related-news-title">${article.title}</h4>
+                    </div>
+                  </a>
+                </div>
+              `
+          )
+          .join("");
+      }
+    </script>
+  </body>
+</html>
