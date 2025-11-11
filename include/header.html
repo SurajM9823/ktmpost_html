@@ -575,33 +575,33 @@
 </style>
 
 <style>
-    /* Sidebar Dropdown Visibility Fix */
-    .sidebar__menu-wrapper .sidebar__dropdown .sidebar__dropdown-menu {
-        display: none; /* Hide by default */
-        background-color: #f8f9fa; /* Optional: Light background for visibility */
-        padding: 10px 0;
-        border-top: 1px solid #dee2e6; /* Optional: Subtle separator */
-        margin-top: 5px; /* Optional: Spacing */
-    }
-    .sidebar__menu-wrapper .sidebar__dropdown.active .sidebar__dropdown-menu {
-        display: block; /* Show when toggled */
-    }
-    /* Optional: Smooth animation */
-    .sidebar__dropdown-menu {
-        transition: all 0.3s ease-in-out;
-    }
-    /* Ensure submenu items are styled consistently */
-    .sidebar__dropdown-item {
-        display: block;
-        padding: 8px 20px;
-        color: #333;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    .sidebar__dropdown-item:hover {
-        background-color: #e9ecef;
-        color: var(--theme-color); /* Matches your theme */
-    }
+  /* Sidebar Dropdown Visibility Fix */
+  .sidebar__menu-wrapper .sidebar__dropdown .sidebar__dropdown-menu {
+    display: none; /* Hide by default */
+    background-color: #f8f9fa; /* Optional: Light background for visibility */
+    padding: 10px 0;
+    border-top: 1px solid #dee2e6; /* Optional: Subtle separator */
+    margin-top: 5px; /* Optional: Spacing */
+  }
+  .sidebar__menu-wrapper .sidebar__dropdown.active .sidebar__dropdown-menu {
+    display: block; /* Show when toggled */
+  }
+  /* Optional: Smooth animation */
+  .sidebar__dropdown-menu {
+    transition: all 0.3s ease-in-out;
+  }
+  /* Ensure submenu items are styled consistently */
+  .sidebar__dropdown-item {
+    display: block;
+    padding: 8px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .sidebar__dropdown-item:hover {
+    background-color: #e9ecef;
+    color: var(--theme-color); /* Matches your theme */
+  }
 </style>
 <style>
   .modal-backdrop.show {
@@ -1111,14 +1111,11 @@
               </form>
             </div>
           </div>
-
-
         </div>
-          <a class="nav-link" href="/category/videos/" role="button" title="भिडियो">
+        <a class="nav-link" href="videos.html" role="button" title="भिडियो">
+          <span><i class="fa-solid fa-video"></i> </span>
+        </a>
 
-              <span><i  class="fa-solid fa-video"></i> </span>
-          </a>
-      
         <div class="setting__wrapper">
           <a href="#" class="setting__btn d-none">
             <i class="fa-solid fa-gear"></i>
@@ -1413,8 +1410,6 @@
     </ul>
   </div>
 </header>
-
-
 
 <script src="../../assets/js/jquery-3.5.1.min.js"></script>
 <script src="../js/popper.min.js" crossorigin="anonymous"></script>
