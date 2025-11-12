@@ -479,28 +479,82 @@
         <div class="row">
           <div class="col-md-8 main-content">
             <a href="index.html" class="back-link">&larr; होममा फर्कनुहोस्</a>
-            <img
-              id="news-image"
-              class="news-image"
-              src="images/logo/logo.png"
-              alt="News Image"
-              style="display: none"
-              onerror="this.src='images/logo/logo.png'"
-            />
 
-            <div id="video-iframe-content"></div>
+            <div class="custom-container None">
+              <div class="">
+                <div class="">
+                  <div class="None">
+                    <link rel="stylesheet" href="css/block-template-110.css" />
+                    <div class="block-110 mt-30 mb-30">
+                      <div class="custom-container" id="main-article">
+                        <style>
+                          @import url(https://fonts.googleapis.com/css?family=Khand:300,regular,500,600,700);
+                          .title-13 .title__content {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            position: relative;
+                          }
+                          .title-13 .title__content::before {
+                            content: "";
+                            position: absolute;
+                            top: 100%;
+                            left: 0;
+                            width: 100%;
+                            height: 1px;
+                            background: #e1e1e1;
+                          }
+                          .title-13 .title__content::after {
+                            display: none;
+                          }
+                          .title__content .section__title {
+                            font-family: "khand", sans-serif;
+                            font-size: 42px;
+                            font-weight: 600;
+                            color: var(--theme-color);
+                          }
+                          .title-13 .title__content .section__title::before,
+                          .title-13 .title__content .section__title::after {
+                            display: none;
+                          }
+                          .title-13 .title__content .view__more i {
+                            display: flex;
+                            font-size: 16px;
+                            color: #555;
+                          }
+                        </style>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- trending category articles -->
           <div class="col-md-4 sidebar">
             <div class="sidebar-section">
-              <h3>सम्बन्धित भिडियोहरू</h3>
-              <ul class="latest-news-list" id="latest-video-list">
+              <h3>ट्रेन्डिङ</h3>
+              <ul class="latest-news-list" id="trending-article-list">
                 <!-- Dynamically populated -->
               </ul>
             </div>
           </div>
+          <!-- trending category articles end -->
         </div>
       </div>
     </div>
+
+    <!-- related categpru articles -->
+    <div class="related-news-section">
+      <div class="custom-container">
+        <h3>सम्बन्धित समाचार</h3>
+        <div class="related-news-grid" id="related-news-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+    <!-- related categpru articles end -->
 
     <div id="footer"></div>
 
@@ -511,250 +565,124 @@
         $("#header").load("../include/header.html");
 
         const params = new URLSearchParams(window.location.search);
-        const videoId = params.get("id");
+        const subcategory = params.get("category");
+        console.log(
+          "-0---------------------------------------------------------------"
+        );
+        console.log("subcategory", subcategory);
 
         $.ajax({
-          url: `https://ktmpost.com/api/public/videos/${videoId}`,
-          method: "GET",
-        })
-          .done(function (data) {
-            renderVideo(data);
-            $.ajax({
-              url: `https://ktmpost.com/api/public/videos/`,
-              method: "GET",
-              dataType: "json",
-            }).done(function (video_data) {
-              const latestVideos = video_data.results.slice(0, 10);
-              renderLatestVideos(latestVideos);
-            });
-          })
-          .fail(function (err) {
-            console.error("First request failed:", err);
-          });
+          url: "https://ktmpost.com/api/articles/",
+          type: "GET",
+          dataType: "json",
+          success: function (data) {
+            const articleBySubCategory = data.filter(
+              (article) => article.subcategory === subcategory
+            );
+            console.log("articleBySubCategory", articleBySubCategory);
+
+            // TODO: add logic to determine main article by a category
+            const mainArticle = articleBySubCategory[0];
+
+            const trendingArticlesByCategory = articleBySubCategory.filter(
+              (article) => article.isTrending
+            );
+
+            console.log(
+              "trendingArticlesByCategory",
+              trendingArticlesByCategory
+            );
+
+            const relatedArticles = articleBySubCategory
+              .filter((article) => article !== mainArticle)
+              .slice(0, 8);
+
+            renderMainArticle(mainArticle);
+            renderRelatedArticles(relatedArticles);
+            if (trendingArticlesByCategory.length > 0) {
+              renderTrendingArticles(trendingArticlesByCategory);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error:", error);
+          },
+        });
       });
 
-      function renderVideo(video) {
-        const videoIframeEl = document.getElementById("video-iframe-content");
-        const videoIframeHTML = `
-          <div>
-            <iframe 
-              src=${getYouTubeEmbedUrl(video.platform_url)}"
-              title="${video.title}"
-              frameborder="0"
-              width="750"
-              height="500"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </div>
+      /**
+       * params: article object
+       */
+      function renderMainArticle(article) {
+        const container = $("#main-article");
 
-          <div>
-            <h2>${video.title}</h2>
-            <div>
-              <span>4:12</span>
-              <button>🔗 Share</button>
+        const blockEl = document.createElement("div");
+        blockEl.className = "block-54-grid";
+        container.append(blockEl);
+
+        const renderHTML = `
+          <div class="grid__left">
+            <div class="grid__card">
+              <div class="card__img">
+                <a href="news-detail.html?id=${article.id}">
+                  <img src="${article.featuredImage}" alt="${article.title}"  />
+                </a>
+              </div>
+              <div class="card__details">
+                <h3 class="card__title">
+                  <a href="news-detail.html?id=${article.id}">
+                    ${article.title}
+                  </a>
+                </h3>
+                <div class="card__desc">
+                  ${article.excerpt}
+                </div>
+              </div>
             </div>
-            <p>
-              ${video.description}
-            </p>
           </div>
         `;
-        videoIframeEl.innerHTML = videoIframeHTML;
+        $(blockEl).append(renderHTML);
       }
 
-      function renderLatestVideos(videos) {
-        const list = document.getElementById("latest-video-list");
-        list.innerHTML = videos
+      /**
+       * params: article object list
+       */
+      function renderTrendingArticles(articles) {
+        const list = document.getElementById("trending-article-list");
+        list.innerHTML = articles
           .map(
-            (video) => `
-            <li class="latest-news-item">
-              <a href="video_detail.html?id=${video.id}" class="latest-news-link">${video.title}</a>
-            </li>
-          `
+            (article) => `
+              <li class="latest-news-item">
+                <a href="news-detail.html?id=${article.id}" class="latest-news-link">${article.title}</a>
+              </li>
+            `
           )
           .join("");
       }
 
-      const getYouTubeThumbnail = (url) => {
-        if (!url) return null;
-        const videoId = url.match(
-          /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/
-        );
-        return videoId
-          ? `https://img.youtube.com/vi/${videoId[1]}/maxresdefault.jpg`
-          : null;
-      };
-
-      const getYouTubeEmbedUrl = (url) => {
-        if (!url) return null;
-        const videoId = url.match(
-          /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/
-        );
-        return videoId
-          ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=1`
-          : null;
-      };
-
-      const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 1) return "१ दिन अगाडि";
-        if (diffDays < 7) return `${diffDays} दिन अगाडि`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)} हप्ता अगाडि`;
-        return `${Math.floor(diffDays / 30)} महिना अगाडि`;
-      };
-    </script>
-
-    <!-- <script>
-      class VideoDetail {
-        constructor() {
-          this.videoId = this.getVideoIdFromUrl();
-          this.apiUrl = `${BASE_URL}/public/videos/${this.videoId}`;
-          this.latestApiUrl = `${BASE_URL}/public/videos/`;
-          this.init();
-        }
-
-        getVideoIdFromUrl() {
-          const urlParams = new URLSearchParams(window.location.search);
-          const id = urlParams.get("id");
-          if (id) return id;
-
-          // Try to get from pathname if using /news/id format
-          const pathMatch = window.location.pathname.match(/\/news\/(\d+)/);
-          return pathMatch ? pathMatch[1] : "159"; // Default to 159 if no id provided
-        }
-
-        async init() {
-          try {
-            const newsData = await this.fetchVideoDetail();
-            this.renderVideoDetail(newsData);
-            await this.fetchAndRenderLatest(); // Load latest news for sidebar
-          } catch (error) {
-            console.error("Error loading video detail:", error);
-          }
-        }
-
-        async fetchVideoDetail() {
-          const response = await fetch(this.apiUrl);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return await response.json();
-        }
-
-        async fetchLatest() {
-          const response = await fetch(this.latestApiUrl);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return await response.json();
-        }
-
-        renderVideoDetail(news) {
-          // Update title
-          document.getElementById("news-title").textContent = news.title;
-
-          // Update meta information
-          const authorNameEl = document.getElementById("author-name");
-          if (news.author && news.author.name) {
-            authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ${news.author.name}`;
-          } else {
-            authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ktmpost`; // Default like ekagaj
-          }
-
-          // Update news image if exists
-          const newsImage = document.getElementById("news-image");
-          if (news.featuredImage) {
-            newsImage.src = news.featuredImage;
-            newsImage.alt = news.title;
-            newsImage.style.display = "block";
-          } else {
-            newsImage.style.display = "none";
-          }
-
-          const videoIframeEl = document.getElementById("video-iframe");
-          const videoIframeHTML = `
-            <iframe
-              src="https://www.youtube.com/watch?v=hftZ_tTdKFA&t=32s"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            >
-            </iframe>
-          `;
-          videoIframeEl.append(videoIframeHTML);
-        }
-
-        async fetchAndRenderLatest() {
-          try {
-            const data = await this.fetchLatest();
-            const latestVideos = data.results.slice(0, 8);
-            this.renderLatestVideos(latestVideos);
-          } catch (error) {
-            console.error("Error loading latest videos:", error);
-          }
-        }
-
-        renderLatestVideos(videoList) {
-          const list = document.getElementById("latest-news-list");
-          list.innerHTML = videoList
-            .slice(0, 10)
-            .map(
-              (video) => `
-                <li class="latest-news-item">
-                  <a href="?id=${video.id}" class="latest-news-link">${video.title}</a>
-                </li>
-            `
-            )
-            .join("");
-        }
-
-        getYouTubeThumbnail = (url) => {
-          if (!url) return null;
-          const videoId = url.match(
-            /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/
-          );
-          return videoId
-            ? `https://img.youtube.com/vi/${videoId[1]}/maxresdefault.jpg`
-            : null;
-        };
-
-        getYouTubeEmbedUrl = (url) => {
-          if (!url) return null;
-          const videoId = url.match(
-            /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/
-          );
-          return videoId
-            ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=1`
-            : null;
-        };
-
-        formatDate = (dateString) => {
-          const date = new Date(dateString);
-          const now = new Date();
-          const diffTime = Math.abs(now - date);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-          if (diffDays === 1) return "१ दिन अगाडि";
-          if (diffDays < 7) return `${diffDays} दिन अगाडि`;
-          if (diffDays < 30) return `${Math.floor(diffDays / 7)} हप्ता अगाडि`;
-          return `${Math.floor(diffDays / 30)} महिना अगाडि`;
-        };
+      /**
+       * params: article object list
+       */
+      function renderRelatedArticles(articles) {
+        const grid = document.getElementById("related-news-grid");
+        grid.innerHTML = articles
+          .map(
+            (article) => `
+                <div class="related-news-item">
+                  <a href="news-detail.html?id=${article.id}" class="related-news-link">
+                    <img
+                      src="${article.featuredImage}"
+                      alt="${article.title}"
+                      class="related-news-image"
+                    >
+                    <div class="related-news-content">
+                      <h4 class="related-news-title">${article.title}</h4>
+                    </div>
+                  </a>
+                </div>
+              `
+          )
+          .join("");
       }
-
-      // Initialize when DOM is loaded
-      document.addEventListener("DOMContentLoaded", () => {
-        const newsDetail = new VideoDetail();
-        // Load header and footer
-        $("#header").load("include/header.html", function () {
-          new DynamicHeader();
-        });
-        $("#footer").load("include/footer.html");
-      });
-    </script> -->
+    </script>
   </body>
 </html>

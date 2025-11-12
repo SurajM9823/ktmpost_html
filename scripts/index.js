@@ -19,6 +19,14 @@ $(document).ready(function () {
         articlesByCategory[categoryId].push(article);
       });
 
+      console.log(
+        "------------------------------------------------------------------------------------------------"
+      );
+      const articleBySubcategory = data.filter(
+        (article) => article.subcategory === "बैंक"
+      );
+      console.log("articleBySubcategory", articleBySubcategory);
+
       const categoryIds = Object.keys(articlesByCategory);
       const firstCategoryArticles = articlesByCategory[categoryIds[0]].slice(
         0,

@@ -67,7 +67,9 @@ class DynamicHeader {
               ${category.subcategories
                 .map(
                   (sub) =>
-                    `<li><a class="dropdown-item" href="/category/${sub.toLowerCase()}/">${sub}</a></li>`
+                    `<li>
+                      <a class="dropdown-item" href="subcategory_news_detail.html?category=${sub}">${sub}</a>
+                    </li>`
                 )
                 .join("")}
             </ul>
@@ -102,7 +104,7 @@ class DynamicHeader {
           ${category.subcategories
             .map(
               (sub) =>
-                `<a class="sidebar__dropdown-item" href="/category/${sub.toLowerCase()}/">${sub}</a>`
+                `<a class="sidebar__dropdown-item" href="subcategory_news_detail.html?category=${sub}">${sub}</a>`
             )
             .join("")}
         </div>
