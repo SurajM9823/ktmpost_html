@@ -62,6 +62,19 @@ $(document).ready(function () {
       console.error("Error:", error);
     },
   });
+
+  $.ajax({
+    url: "https://ktmpost.com/api/public/videos/",
+    type: "GET",
+    success: function (response) {
+      const data = response.results;
+      const latestVideos = data.slice(0, 4);
+      renderMultimedia(latestVideos);
+    },
+    error: function () {
+      console.error("Error:", error);
+    },
+  });
 });
 
 function renderFeaturedArticle(articles) {
@@ -477,3 +490,68 @@ function renderFifthCategoryArticle(articles) {
 
   $(blockEl).append(rightGridSectionHTML);
 }
+
+function renderMultimedia(videos) {
+  const container = $("#video-section");
+
+  const firstVideo = videos[0];
+  const remainingVideos = videos.slice(1);
+  console.log("from inside video section", remainingVideos);
+
+  const renderHTML = `
+    <div class="block-106-grid">
+      <div class="grid__card">
+        <div class="grid__card-img">
+          <a href="video_detail.html?id=${firstVideo.id}">
+            <img
+              src="${getYouTubeThumbnail(firstVideo.platform_url)}"
+              alt="${firstVideo.title}"
+            />
+          </a>
+        </div>
+        <div class="grid__card-details">
+          <h2 class="card__title">
+            <a href="video_detail.html?id=${firstVideo.id}">
+              ${firstVideo.title}
+            </a>
+          </h2>
+        </div>
+      </div>
+      ${remainingVideos
+        .map(
+          (video) => `
+          <div class="grid__card">
+            <div class="grid__card-img">
+              <a href="video_detail.html?id=${video.id}">
+                <img
+                  src="${getYouTubeThumbnail(video.platform_url)}"
+                  alt="${video.title}"
+                />
+              </a>
+            </div>
+            <div class="grid__card-details">
+              <h3 class="card__title">
+                <a href="video_detail.html?id=${video.id}">
+                  ${video.title}
+                </a>
+              </h3>
+            </div>
+          </div>
+        `
+        )
+        .join("")}
+    </div>
+  `;
+
+  container.append(renderHTML);
+}
+
+const getYouTubeThumbnail = (url) => {
+  if (!url) return null;
+  const videoId = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/
+  );
+  return videoId
+    ? `https://img.youtube.com/vi/${videoId[1]}/maxresdefault.jpg`
+    : null;
+};
