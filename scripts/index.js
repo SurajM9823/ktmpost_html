@@ -306,7 +306,7 @@ function renderThirdCategoryArticle(articles) {
             </a>
           </h3>
           <div class="card__desc">
-          loremipsum donor haha
+            ${firstArticle.excerpt}
           </div>
         </div>
       </div>
