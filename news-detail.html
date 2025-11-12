@@ -676,7 +676,8 @@
 
         async fetchAndRenderRelated(category, excludeId) {
           try {
-            const relatedNews = await this.fetchRelated(category, excludeId);
+            const data = await this.fetchRelated(category, excludeId);
+            const relatedNews = data.slice(0, 4);
             this.renderRelatedNews(relatedNews);
           } catch (error) {
             console.error("Error loading related news:", error);

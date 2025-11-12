@@ -480,54 +480,24 @@
           <div class="col-md-8 main-content">
             <a href="index.html" class="back-link">&larr; होममा फर्कनुहोस्</a>
 
-            <div class="custom-container None">
-              <div class="">
-                <div class="">
-                  <div class="None">
-                    <link rel="stylesheet" href="css/block-template-110.css" />
-                    <div class="block-110 mt-30 mb-30">
-                      <div class="custom-container" id="main-article">
-                        <style>
-                          @import url(https://fonts.googleapis.com/css?family=Khand:300,regular,500,600,700);
-                          .title-13 .title__content {
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            position: relative;
-                          }
-                          .title-13 .title__content::before {
-                            content: "";
-                            position: absolute;
-                            top: 100%;
-                            left: 0;
-                            width: 100%;
-                            height: 1px;
-                            background: #e1e1e1;
-                          }
-                          .title-13 .title__content::after {
-                            display: none;
-                          }
-                          .title__content .section__title {
-                            font-family: "khand", sans-serif;
-                            font-size: 42px;
-                            font-weight: 600;
-                            color: var(--theme-color);
-                          }
-                          .title-13 .title__content .section__title::before,
-                          .title-13 .title__content .section__title::after {
-                            display: none;
-                          }
-                          .title-13 .title__content .view__more i {
-                            display: flex;
-                            font-size: 16px;
-                            color: #555;
-                          }
-                        </style>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <h1 class="news-title" id="news-title">Loading...</h1>
+
+            <div class="news-meta">
+              <div class="author-info" id="author-name">Loading...</div>
+              <span class="publish-date" id="publish-date">Loading...</span>
+            </div>
+
+            <img
+              id="news-image"
+              class="news-image"
+              src="images/logo/logo.png"
+              alt="News Image"
+              style="display: none"
+              onerror="this.src='images/logo/logo.png'"
+            />
+
+            <div class="news-content" id="news-content">
+              Loading news content...
             </div>
           </div>
 
@@ -535,7 +505,7 @@
           <div class="col-md-4 sidebar">
             <div class="sidebar-section">
               <h3>ट्रेन्डिङ</h3>
-              <ul class="latest-news-list" id="trending-article-list">
+              <ul class="latest-news-list" id="latest-news-list">
                 <!-- Dynamically populated -->
               </ul>
             </div>
@@ -545,7 +515,7 @@
       </div>
     </div>
 
-    <!-- related categpru articles -->
+    <!-- Full-width Related News Section -->
     <div class="related-news-section">
       <div class="custom-container">
         <h3>सम्बन्धित समाचार</h3>
@@ -554,19 +524,16 @@
         </div>
       </div>
     </div>
-    <!-- related categpru articles end -->
 
     <div id="footer"></div>
 
     <script>
-      let newsId;
       $(document).ready(function () {
         $("#footer").load("../include/footer.html");
         $("#header").load("../include/header.html");
 
         const params = new URLSearchParams(window.location.search);
         const category = params.get("category");
-
         $.ajax({
           url: "https://ktmpost.com/api/articles/",
           type: "GET",
@@ -588,7 +555,7 @@
               .slice(0, 8);
 
             renderMainArticle(mainArticle);
-            renderRelatedArticles(relatedArticles);
+            renderRelatedNews(relatedArticles);
             renderTrendingArticles(trendingArticlesByCategory);
           },
           error: function (xhr, status, error) {
@@ -601,42 +568,60 @@
        * params: article object
        */
       function renderMainArticle(article) {
-        const container = $("#main-article");
+        document.getElementById("news-title").textContent = article.title;
+        const authorNameEl = document.getElementById("author-name");
+        if (article.author && article.author.name) {
+          authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ${article.author.name}`;
+        } else {
+          authorNameEl.innerHTML = `<i class="fas fa-pencil-alt"></i> ktmpost`; // Default like ekagaj
+        }
+        document.getElementById("publish-date").textContent = formatDateNepali(
+          article.publishDate + " " + (article.publishTime || "")
+        );
 
-        const blockEl = document.createElement("div");
-        blockEl.className = "block-54-grid";
-        container.append(blockEl);
+        // Update news image if exists
+        const newsImage = document.getElementById("news-image");
+        if (article.featuredImage) {
+          newsImage.src = article.featuredImage;
+          newsImage.alt = article.title;
+          newsImage.style.display = "block";
+        } else {
+          newsImage.style.display = "none";
+        }
 
-        const renderHTML = `
-          <div class="grid__left">
-            <div class="grid__card">
-              <div class="card__img">
-                <a href="news-detail.html?id=${article.id}">
-                  <img src="${article.featuredImage}" alt="${article.title}"  />
+        // Update content
+        document.getElementById("news-content").innerHTML = article.content;
+      }
+
+      /**
+       * params: article object list
+       */
+      function renderRelatedNews(articles) {
+        const grid = document.getElementById("related-news-grid");
+        grid.innerHTML = articles
+          .slice(0, 20)
+          .map(
+            (article) => `
+              <div class="related-news-item">
+                <a href="news-detail.html?id=${article.id}" class="related-news-link">
+                  <img src="${article.featuredImage}" alt="${article.title}" class="related-news-image">
+                  <div class="related-news-content">
+                    <h4 class="related-news-title">${article.title}</h4>
+                  </div>
                 </a>
               </div>
-              <div class="card__details">
-                <h3 class="card__title">
-                  <a href="news-detail.html?id=${article.id}">
-                    ${article.title}
-                  </a>
-                </h3>
-                <div class="card__desc">
-                  ${article.excerpt}
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        $(blockEl).append(renderHTML);
+            `
+          )
+          .join("");
       }
 
       /**
        * params: article object list
        */
       function renderTrendingArticles(articles) {
-        const list = document.getElementById("trending-article-list");
+        const list = document.getElementById("latest-news-list");
         list.innerHTML = articles
+          .slice(0, 10)
           .map(
             (article) => `
               <li class="latest-news-item">
@@ -647,29 +632,58 @@
           .join("");
       }
 
-      /**
-       * params: article object list
-       */
-      function renderRelatedArticles(articles) {
-        const grid = document.getElementById("related-news-grid");
-        grid.innerHTML = articles
-          .map(
-            (article) => `
-                <div class="related-news-item">
-                  <a href="news-detail.html?id=${article.id}" class="related-news-link">
-                    <img
-                      src="${article.featuredImage}"
-                      alt="${article.title}"
-                      class="related-news-image"
-                    >
-                    <div class="related-news-content">
-                      <h4 class="related-news-title">${article.title}</h4>
-                    </div>
-                  </a>
-                </div>
-              `
-          )
-          .join("");
+      function formatDateNepali(dateString) {
+        const date = new Date(dateString);
+        const weekdays = [
+          "आइतबार",
+          "सोमबार",
+          "मङ्गलबार",
+          "बुधबार",
+          "बिहिबार",
+          "शुक्रबार",
+          "शनिबार",
+        ];
+        const months = [
+          "जनवरी",
+          "फेब्रुअरी",
+          "मार्च",
+          "अप्रिल",
+          "मे",
+          "जुन",
+          "जुलाई",
+          "अगस्ट",
+          "सेप्टेम्बर",
+          "अक्टोबर",
+          "नोभेम्बर",
+          "डिसेम्बर",
+        ];
+
+        const toNepaliDigits = (num) => {
+          const nepaliDigits = [
+            "०",
+            "१",
+            "२",
+            "३",
+            "४",
+            "५",
+            "६",
+            "७",
+            "८",
+            "९",
+          ];
+          return num
+            .toString()
+            .split("")
+            .map((d) => nepaliDigits[parseInt(d)])
+            .join("");
+        };
+
+        const weekday = weekdays[date.getDay()];
+        const day = toNepaliDigits(date.getDate());
+        const month = months[date.getMonth()];
+        const year = toNepaliDigits(date.getFullYear());
+
+        return `${weekday} ${day} ${month} ${year}`;
       }
     </script>
   </body>
