@@ -532,6 +532,9 @@
         $("#footer").load("../include/footer.html");
         $("#header").load("../include/header.html");
 
+        renderMainArticlePlaceholder();
+        renderTrendingArticlesPlaceholder();
+
         const params = new URLSearchParams(window.location.search);
         const category = params.get("category");
         $.ajax({
@@ -589,6 +592,12 @@
           newsImage.style.display = "none";
         }
 
+        const imgPlaceholder = document.getElementById(
+          "news-image-placeholder"
+        );
+        if (imgPlaceholder) imgPlaceholder.remove();
+        document.getElementById("news-image").style.display = "block";
+
         // Update content
         document.getElementById("news-content").innerHTML = article.content;
       }
@@ -626,6 +635,64 @@
             (article) => `
               <li class="latest-news-item">
                 <a href="news-detail.html?id=${article.id}" class="latest-news-link">${article.title}</a>
+              </li>
+            `
+          )
+          .join("");
+      }
+
+      function renderMainArticlePlaceholder() {
+        document.getElementById("news-title").innerHTML = `
+          <span class="placeholder-glow">
+            <span class="placeholder col-12"></span>
+          </span>
+        `;
+        document.getElementById("author-name").innerHTML = `
+          <span class="placeholder-glow">
+            <span class="placeholder col-4"></span>
+          </span>
+        `;
+        document.getElementById("publish-date").innerHTML = `
+          <span class="placeholder-glow">
+            <span class="placeholder col-3"></span>
+          </span>
+        `;
+
+        const newsImage = document.getElementById("news-image");
+        newsImage.style.display = "none";
+        if (!document.getElementById("news-image-placeholder")) {
+          const imgPlaceholder = document.createElement("div");
+          imgPlaceholder.id = "news-image-placeholder";
+          imgPlaceholder.style.width = "100%";
+          imgPlaceholder.style.maxHeight = "400px";
+          imgPlaceholder.style.height = "250px";
+          imgPlaceholder.style.background = "#e9ecef";
+          imgPlaceholder.style.borderRadius = "8px";
+          imgPlaceholder.style.marginBottom = "30px";
+          imgPlaceholder.className = "placeholder-glow";
+          imgPlaceholder.innerHTML = `<span class="placeholder col-12" style="height:100%;display:block;"></span>`;
+          newsImage.parentNode.insertBefore(imgPlaceholder, newsImage);
+        }
+
+        document.getElementById("news-content").innerHTML = `
+        <span class="placeholder-glow">
+          <span class="placeholder col-12"></span>
+          <span class="placeholder col-10"></span>
+          <span class="placeholder col-8"></span>
+          <span class="placeholder col-6"></span>
+        </span>
+      `;
+      }
+
+      function renderTrendingArticlesPlaceholder() {
+        const list = document.getElementById("latest-news-list");
+        list.innerHTML = Array.from({ length: 5 })
+          .map(
+            () => `
+              <li class="latest-news-item">
+                <span class="placeholder-glow">
+                  <span class="placeholder col-12"></span>
+                </span>
               </li>
             `
           )

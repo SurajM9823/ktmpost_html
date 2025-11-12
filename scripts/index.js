@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  renderFeaturedArticlePlaceholder();
+
   $.ajax({
     url: "https://ktmpost.com/api/articles/",
     type: "GET",
@@ -19,13 +21,9 @@ $(document).ready(function () {
         articlesByCategory[categoryId].push(article);
       });
 
-      console.log(
-        "------------------------------------------------------------------------------------------------"
-      );
       const articleBySubcategory = data.filter(
         (article) => article.subcategory === "बैंक"
       );
-      console.log("articleBySubcategory", articleBySubcategory);
 
       const categoryIds = Object.keys(articlesByCategory);
       const firstCategoryArticles = articlesByCategory[categoryIds[0]].slice(
@@ -79,6 +77,7 @@ $(document).ready(function () {
 
 function renderFeaturedArticle(articles) {
   const container = $("#featured-news-section");
+  container.empty(); // remove the placeholder
   articles.forEach((article) => {
     const articleHTML = `
       <div class="single__big-news">
@@ -98,15 +97,7 @@ function renderFeaturedArticle(articles) {
           </div>
           <div class="news__author">
             <div class="author">
-              <a href="/news/detail/202921/">
-                <span class="author__name">${article.author.name}</span>
-              </a>
-            </div>
-            <div class="news__post-date">
-              <p class="date">
-                <i class="ph-clock"></i>
-                4 hours, 35 minutes
-              </p>
+              <span class="author__name">${article.author.name}</span>
             </div>
           </div>
         </div>
@@ -555,3 +546,33 @@ const getYouTubeThumbnail = (url) => {
     ? `https://img.youtube.com/vi/${videoId[1]}/maxresdefault.jpg`
     : null;
 };
+
+function renderFeaturedArticlePlaceholder() {
+  const container = $("#featured-news-section");
+  container.empty();
+
+  container.append(`
+    ${Array.from({ length: 2 })
+      .map(
+        () => `
+      <div class="single__big-news">
+        <div class="big__news-card">
+          <h3 class="big__title placeholder-glow">
+            <span class="placeholder col-12"></span>
+          </h3>
+          <div class="news__big-img placeholder-glow" style="height:220px;background:#e9ecef;border-radius:8px;">
+            <span class="placeholder col-12" style="height:100%;display:block;"></span>
+          </div>
+          <div class="news__author">
+            <div class="author placeholder-glow">
+              <span class="placeholder col-4"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+      )
+      .join("")}
+    
+  `);
+}
